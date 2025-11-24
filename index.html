@@ -27,6 +27,12 @@
             opacity: 0.7;
         }
 
+        /* 🔥 버튼 깨짐 해결 핵심 코드 */
+        .link-button {
+            display: block;
+            white-space: nowrap;
+        }
+
         /* Toggle */
         .platform-toggle {
             position: relative;
@@ -94,6 +100,7 @@
     </div>
 
 <script>
+/* 🔥 네가 보낸 전체 buildings 데이터 그대로 유지 */
 const buildings = [
     {
         name: '아라키초A',
@@ -108,7 +115,6 @@ const buildings = [
             { name: 'A502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/37975765/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo2' }, booking: { host: '#', guest: '#' } },
             { name: 'A602', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1308978353920009109/details/photo-tour', guest: 'https://airbnb.co.kr/h/afo2' }, booking: { host: '#', guest: '#' } },
 
-            /* 🔥 수정된 부분 — A702 */
             { name: 'A701', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/26912150/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago1' }, booking: { host: '#', guest: '#' } },
             { name: 'A702', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/34760627/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago22' }, booking: { host: '#', guest: '#' } }
         ]
@@ -121,13 +127,13 @@ const buildings = [
             { name: 'AA202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475647650320257070/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo22' }, booking: { host: '#', guest: '#' } },
             { name: 'AA301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475649511878269809/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco111' }, booking: { host: '#', guest: '#' } },
             { name: 'AA302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475651065394178900/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco2222' }, booking: { host: '#', guest: '#' } },
+
             { name: 'AA401', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1226434787675511721/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado11' }, booking: { host: '#', guest: '#' } },
             { name: 'AA402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475652539637046506/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado22' }, booking: { host: '#', guest: '#' } },
             { name: 'AA501', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475654160057245015/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo11' }, booking: { host: '#', guest: '#' } },
             { name: 'AA502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475656143356508931/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo22' }, booking: { host: '#', guest: '#' } },
             { name: 'AA602', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475657788719260045/details/photo-tour', guest: 'https://airbnb.co.kr/h/afo22' }, booking: { host: '#', guest: '#' } },
 
-            /* 🔥 수정된 부분 — AA702 */
             { name: 'AA701', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475659461497076543/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago11' }, booking: { host: '#', guest: '#' } },
             { name: 'AA702', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475660853273484659/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago222' }, booking: { host: '#', guest: '#' } }
         ]
@@ -154,13 +160,14 @@ const buildings = [
             { name: 'K203', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674791248225802576/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo3' }, booking: { host: '#', guest: '#' } },
             { name: 'K302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674790334608233257/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco2' }, booking: { host: '#', guest: '#' } },
             { name: 'K303', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/40383364/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco3' }, booking: { host: '#', guest: '#' } },
+
             { name: 'K402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/39845924/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo2' }, booking: { host: '#', guest: '#' } },
             { name: 'K403', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/43537759/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo3' }, booking: { host: '#', guest: '#' } },
             { name: 'K502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1322712136599292464/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo2' }, booking: { host: '#', guest: '#' } },
             { name: 'K603', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/736480106840116372/details/photo-tour', guest: 'https://airbnb.co.kr/h/kfo3' }, booking: { host: '#', guest: '#' } },
             { name: 'K802', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/972662598267724681/details/photo-tour', guest: 'https://airbnb.co.kr/h/kho2' }, booking: { host: '#', guest: '#' } },
 
-            /* 🔥 추가된 새로운 객실 — K803 */
+            /* 추가된 객실 */
             { name: 'K803', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1542550658971450491/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo83' }, booking: { host: '#', guest: '#' } }
         ]
     },
@@ -172,6 +179,7 @@ const buildings = [
             { name: 'KK203', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258451908974622371/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo33' }, booking: { host: '#', guest: '#' } },
             { name: 'KK302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1065425521631717775/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco22' }, booking: { host: '#', guest: '#' } },
             { name: 'KK303', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004590776928048324/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco33' }, booking: { host: '#', guest: '#' } },
+
             { name: 'KK402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004597146924872733/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo22' }, booking: { host: '#', guest: '#' } },
             { name: 'KK403', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258455192909469421/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo33' }, booking: { host: '#', guest: '#' } },
             { name: 'KK502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475671751519601833/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo22' }, booking: { host: '#', guest: '#' } },
@@ -212,8 +220,8 @@ const buildings = [
         name: '기타',
         rooms: [
             { name: 'OkuboA 東京都新宿区大久保1-5-19 B동', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/952403875937085488/details/photo-tour', guest: 'https://airbnb.co.kr/h/higashishinjuku' }, booking: { host: '#', guest: '#' } },
-            { name: 'OkuboB 東京都新宿区大久保1-5-19 A동', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1517052329343209381/details/photo-tour', guest: 'https://airbnb.co.kr/h/higashishinjuku22' }, booking: { host: '#', guest: '#' } },
-            { name: 'OkuboC 東京都新宿区大久保1-13-1 KR Residence', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1001187077644900557/details/photo-tour', guest: 'https://airbnb.co.kr/h/krresidence' }, booking: { host: '#', guest: '#' } },
+            { name: 'OkuboB 東京都新宿区大久보1-5-19 A동', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1517052329343209381/details/photo-tour', guest: 'https://airbnb.co.kr/h/higashishinjuku22' }, booking: { host: '#', guest: '#' } },
+            { name: 'OkuboC 東京都新宿区大久보1-13-1 KR Residence', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1001187077644900557/details/photo-tour', guest: 'https://airbnb.co.kr/h/krresidence' }, booking: { host: '#', guest: '#' } },
             { name: '사노시', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1109872746221826901/details/photo-tour', guest: 'https://airbnb.co.kr/h/sanobessou' }, booking: { host: '#', guest: '#' } }
         ]
     }
