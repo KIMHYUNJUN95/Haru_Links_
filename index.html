@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haru Links - 객실 링크 관리</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HARU 주문 목록</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -20,13 +21,13 @@
         }
 
         .disabled-link {
-            background-color: #a0aec0; /* gray-500 */
+            background-color: #a0aec0;
             cursor: not-allowed;
             pointer-events: none;
             opacity: 0.7;
         }
 
-        /* Animated Toggle Switch Styles */
+        /* Toggle */
         .platform-toggle {
             position: relative;
             background-color: rgba(0, 0, 0, 0.05);
@@ -40,63 +41,38 @@
             height: calc(100% - 8px);
             background-color: white;
             border-radius: 9999px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: transform 0.3s ease;
         }
         .platform-toggle.booking-active::before {
             transform: translateX(100%);
         }
-        .platform-toggle button {
-            position: relative;
-            z-index: 1;
-            color: #4a5568; /* gray-700 */
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
         .platform-toggle button.active {
-            color: #2b6cb0; /* blue-800 */
+            color: #2b6cb0;
         }
-        
-        /* Accordion Styles */
-        .accordion-header {
-            transition: background-color 0.2s ease-in-out;
-        }
+
+        /* Accordion */
         .accordion-header:hover {
             background-color: rgba(0, 0, 0, 0.03);
         }
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-in-out;
+            transition: max-height 0.4s ease;
         }
         .accordion-header svg {
-            transition: transform 0.4s ease-in-out;
+            transition: transform 0.4s ease;
         }
         .accordion-header.open svg {
             transform: rotate(180deg);
         }
 
-        /* Button Styles */
-        .link-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.2s ease-in-out;
-        }
         .link-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .room-title {
-            white-space: normal;
-            word-break: keep-all;
-            line-height: 1.4;
         }
     </style>
 </head>
-<body class="min-h-screen">
 
+<body class="min-h-screen">
     <div class="container mx-auto max-w-2xl p-4 sm:p-6 md:p-8">
         <header class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">Haru Links</h1>
@@ -110,228 +86,220 @@
             </div>
         </div>
 
-        <main id="building-list-container" class="space-y-4">
-            </main>
-        
+        <main id="building-list-container" class="space-y-4"></main>
+
         <footer class="text-center mt-12 text-sm text-gray-500">
             <p>링크를 클릭하면 새 탭에서 열립니다.</p>
         </footer>
     </div>
 
-    <script>
-        // -- 여기에 객실 이름과 링크를 추가하거나 수정해주세요 --
-        const buildings = [
-            {
-                name: '아라키초A',
-                rooms: [
-                    { name: 'A201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/31627968/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo11' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/29538888/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/32319977/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco1111' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/26860834/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco222' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A401', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965496947227437163/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado1' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/33408043/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A501', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1177012477469914627/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo1' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/37975765/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A602', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1308978353920009109/details/photo-tour', guest: 'https://airbnb.co.kr/h/afo2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A701', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/26912150/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago1' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'A702', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/34760627/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } }
-                ]
-            },
-            {
-                name: '아라키초AA',
-                rooms: [
-                    { name: 'AA201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475641369123867060/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo11' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475647650320257070/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475649511878269809/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco111' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475651065394178900/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco2222' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA401', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1226434787675511721/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado11' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475652539637046506/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA501', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475654160057245015/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo11' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475656143356508931/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA602', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475657788719260045/details/photo-tour', guest: 'https://airbnb.co.kr/h/afo22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA701', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475659461497076543/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago11' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } },
-                    { name: 'AA702', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/34760627/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago222' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=5653523', guest: '#' } }
-                ]
-            },
-            {
-                name: '아라키초B',
-                rooms: [
-                    { name: 'AB101', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1439443421026163183/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab101' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } },
-                    { name: 'AB102', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440146085380961828/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab102' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } },
-                    { name: 'AB201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1439610992297640983/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab2011' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } },
-                    { name: 'AB202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440878497991046888/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab2022' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } },
-                    { name: 'AB301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440119786853463001/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab3011' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } },
-                    { name: 'AB302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440873306709137111/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab3022' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } },
-                    { name: 'AB401', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440120712821303902/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab401' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } },
-                    { name: 'AB402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440879387948238201/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab402' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=14347249', guest: '#' } }
-                ]
-            },
-            {
-                name: '가부키초K',
-                rooms: [
-                    { name: 'K202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674791405856669260/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K203', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674791248225802576/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo3' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674790334608233257/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K303', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/40383364/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco3' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/39845924/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K403', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/43537759/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo3' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1322712136599292464/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K603', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/736480106840116372/details/photo-tour', guest: 'https://airbnb.co.kr/h/kfo3' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'K802', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/972662598267724681/details/photo-tour', guest: 'https://airbnb.co.kr/h/kho2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } }
-                ]
-            },
-            {
-                name: '가부키초KK',
-                rooms: [
-                    { name: 'KK202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004589512654505656/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK203', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258451908974622371/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo33' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1065425521631717775/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK303', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004590776928048324/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco33' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004597146924872733/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK403', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258455192909469421/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo33' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475671751519601833/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK603', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258456014791965308/details/photo-tour', guest: 'https://airbnb.co.kr/h/kfo33' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } },
-                    { name: 'KK802', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258456948313175515/details/photo-tour', guest: 'https://airbnb.co.kr/h/kho22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=6100941', guest: '#' } }
-                ]
-            },
-            {
-                name: '다카다노바바',
-                rooms: [
-                    { name: '2', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214230580288626213/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba2' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '3', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1216877132493273384/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba3' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '4', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1182114775644658542/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba4' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '4키즈룸', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1343899459815332438/details/photo-tour', guest: 'https://airbnb.co.kr/h/t4kids' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '5', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214236999603623357/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba5' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '6', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214238348307908175/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba6' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '7', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214239283431336487/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba7' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '8', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214240267860622382/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba8' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } },
-                    { name: '9', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214241285798631988/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba9' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12602018', guest: '#' } }
-                ]
-            },
-            {
-                name: '다이쿄초',
-                rooms: [
-                    { name: 'B01', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965558957563417053/details/photo-tour', guest: 'https://airbnb.co.kr/h/db01gyoen' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10678793', guest: '#' } },
-                    { name: 'B02', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965560158683430511/details/photo-tour', guest: 'https://airbnb.co.kr/h/db02gyoen' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10678793', guest: '#' } },
-                    { name: 'Y101', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965553590629698304/details/photo-tour', guest: 'https://airbnb.co.kr/h/101gyoen' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10678793', guest: '#' } },
-                    { name: 'Y102', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965562240007732988/details/photo-tour', guest: 'https://airbnb.co.kr/h/102gyoen' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10678793', guest: '#' } },
-                    { name: 'Y201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965563478624315997/details/photo-tour', guest: 'https://airbnb.co.kr/h/201gyoen' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10678793', guest: '#' } },
-                    { name: 'Y202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965564827009588959/details/photo-tour', guest: 'https://airbnb.co.kr/h/202gyoen' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10678793', guest: '#' } },
-                    { name: 'Y301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965566400786989909/details/photo-tour', guest: 'https://airbnb.co.kr/h/302gyoen' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10678793', guest: '#' } }
-                ]
-            },
-            {
-                name: '기타',
-                rooms: [
-                    { name: 'OkuboA 東京都新宿区大久保1-5-19 B동 Hikari', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/952403875937085488/details/photo-tour', guest: 'https://airbnb.co.kr/h/higashishinjuku' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=10587340', guest: '#' } },
-                    { name: 'OkuboB 東京都新宿区大久保1-5-19 A동', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1517052329343209381/details/photo-tour', guest: 'https://airbnb.co.kr/h/higashishinjuku22' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=2af5a8921c2f7cc26ee97d7a68e9868f&f_gc_header=0&hotel_id=14989094', guest: '#' } },
-                    { name: 'OkuboC 東京都新宿区大久保1-13-1 KR Residence', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1001187077644900557/details/photo-tour', guest: 'https://airbnb.co.kr/h/krresidence' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/photos.html?hotel_id=11142867&lang=ko&ses=e2ee548d8763b0fb0b09b383f81cb199', guest: '#' } },
-                    { name: '사노시', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1109872746221826901/details/photo-tour', guest: 'https://airbnb.co.kr/h/sanobessou' }, booking: { host: 'https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/home.html?ses=d1af6127b1cce76e8cf95b2a07da0012&f_gc_header=0&hotel_id=12069922', guest: '#' } }
-                ]
-            }
-        ];
-        // -- 여기까지 수정하시면 됩니다 --
+<script>
+const buildings = [
+    {
+        name: '아라키초A',
+        rooms: [
+            { name: 'A201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/31627968/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo1' }, booking: { host: '#', guest: '#' } },
+            { name: 'A202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/29538888/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo2' }, booking: { host: '#', guest: '#' } },
+            { name: 'A301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/32319977/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco1111' }, booking: { host: '#', guest: '#' } },
+            { name: 'A302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/26860834/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco222' }, booking: { host: '#', guest: '#' } },
+            { name: 'A401', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965496947227437163/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado1' }, booking: { host: '#', guest: '#' } },
+            { name: 'A402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/33408043/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado2' }, booking: { host: '#', guest: '#' } },
+            { name: 'A501', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1177012477469914627/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo1' }, booking: { host: '#', guest: '#' } },
+            { name: 'A502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/37975765/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo2' }, booking: { host: '#', guest: '#' } },
+            { name: 'A602', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1308978353920009109/details/photo-tour', guest: 'https://airbnb.co.kr/h/afo2' }, booking: { host: '#', guest: '#' } },
 
+            /* 🔥 수정된 부분 — A702 */
+            { name: 'A701', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/26912150/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago1' }, booking: { host: '#', guest: '#' } },
+            { name: 'A702', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/34760627/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago22' }, booking: { host: '#', guest: '#' } }
+        ]
+    },
 
-        const container = document.getElementById('building-list-container');
-        const btnAirbnb = document.getElementById('btn-airbnb');
-        const btnBooking = document.getElementById('btn-booking');
-        const platformToggleContainer = document.getElementById('platform-toggle-container');
-        let currentPlatform = 'airbnb';
+    {
+        name: '아라키초AA',
+        rooms: [
+            { name: 'AA201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475641369123867060/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo11' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475647650320257070/details/photo-tour', guest: 'https://airbnb.co.kr/h/abo22' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475649511878269809/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco111' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475651065394178900/details/photo-tour', guest: 'https://airbnb.co.kr/h/aco2222' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA401', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1226434787675511721/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado11' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475652539637046506/details/photo-tour', guest: 'https://airbnb.co.kr/h/ado22' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA501', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475654160057245015/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo11' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475656143356508931/details/photo-tour', guest: 'https://airbnb.co.kr/h/aeo22' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA602', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475657788719260045/details/photo-tour', guest: 'https://airbnb.co.kr/h/afo22' }, booking: { host: '#', guest: '#' } },
 
-        function renderList(platform) {
-            container.innerHTML = ''; // Clear previous list
+            /* 🔥 수정된 부분 — AA702 */
+            { name: 'AA701', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475659461497076543/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago11' }, booking: { host: '#', guest: '#' } },
+            { name: 'AA702', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475660853273484659/details/photo-tour', guest: 'https://airbnb.co.kr/h/ago222' }, booking: { host: '#', guest: '#' } }
+        ]
+    },
 
-            if (buildings.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500 p-8 bg-white rounded-xl shadow-md">표시할 객실 링크가 없습니다.<br>HTML 파일의 스크립트에서 링크를 추가해주세요.</p>';
-                return;
-            }
+    {
+        name: '아라키초B',
+        rooms: [
+            { name: 'AB101', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1439443421026163183/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab101' }, booking: { host: '#', guest: '#' } },
+            { name: 'AB102', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440146085380961828/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab102' }, booking: { host: '#', guest: '#' } },
+            { name: 'AB201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1439610992297640983/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab2011' }, booking: { host: '#', guest: '#' } },
+            { name: 'AB202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440878497991046888/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab2022' }, booking: { host: '#', guest: '#' } },
+            { name: 'AB301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440119786853463001/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab3011' }, booking: { host: '#', guest: '#' } },
+            { name: 'AB302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440873306709137111/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab3022' }, booking: { host: '#', guest: '#' } },
+            { name: 'AB401', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440120712821303902/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab401' }, booking: { host: '#', guest: '#' } },
+            { name: 'AB402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1440879387948238201/details/photo-tour', guest: 'https://airbnb.co.kr/h/ab402' }, booking: { host: '#', guest: '#' } }
+        ]
+    },
 
-            buildings.forEach((building, index) => {
-                const buildingSection = document.createElement('div');
-                buildingSection.className = 'main-container rounded-xl shadow-lg overflow-hidden';
+    {
+        name: '가부키초K',
+        rooms: [
+            { name: 'K202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674791405856669260/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo2' }, booking: { host: '#', guest: '#' } },
+            { name: 'K203', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674791248225802576/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo3' }, booking: { host: '#', guest: '#' } },
+            { name: 'K302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/674790334608233257/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco2' }, booking: { host: '#', guest: '#' } },
+            { name: 'K303', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/40383364/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco3' }, booking: { host: '#', guest: '#' } },
+            { name: 'K402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/39845924/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo2' }, booking: { host: '#', guest: '#' } },
+            { name: 'K403', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/43537759/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo3' }, booking: { host: '#', guest: '#' } },
+            { name: 'K502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1322712136599292464/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo2' }, booking: { host: '#', guest: '#' } },
+            { name: 'K603', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/736480106840116372/details/photo-tour', guest: 'https://airbnb.co.kr/h/kfo3' }, booking: { host: '#', guest: '#' } },
+            { name: 'K802', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/972662598267724681/details/photo-tour', guest: 'https://airbnb.co.kr/h/kho2' }, booking: { host: '#', guest: '#' } },
 
-                // Accordion Header
-                const header = document.createElement('div');
-                header.className = 'accordion-header p-5 flex justify-between items-center cursor-pointer border-b border-gray-200/50';
-                header.innerHTML = `
-                    <h2 class="text-xl font-bold text-gray-700">${building.name}</h2>
-                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                `;
+            /* 🔥 추가된 새로운 객실 — K803 */
+            { name: 'K803', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1542550658971450491/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo83' }, booking: { host: '#', guest: '#' } }
+        ]
+    },
 
-                // Accordion Content
-                const content = document.createElement('div');
-                content.className = 'accordion-content';
-                
-                const roomGrid = document.createElement('div');
-                roomGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5';
-                
-                building.rooms.forEach(room => {
-                    const links = room[platform] || { host: '#', guest: '#' };
-                    
-                    const hostLinkClass = links.host === '#' ? 'disabled-link' : 'bg-indigo-600 hover:bg-indigo-700';
-                    const guestLinkClass = links.guest === '#' ? 'disabled-link' : 'bg-teal-500 hover:bg-teal-600';
+    {
+        name: '가부키초KK',
+        rooms: [
+            { name: 'KK202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004589512654505656/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo22' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK203', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258451908974622371/details/photo-tour', guest: 'https://airbnb.co.kr/h/kbo33' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK302', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1065425521631717775/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco22' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK303', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004590776928048324/details/photo-tour', guest: 'https://airbnb.co.kr/h/kco33' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK402', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1004597146924872733/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo22' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK403', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258455192909469421/details/photo-tour', guest: 'https://airbnb.co.kr/h/kdo33' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK502', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1475671751519601833/details/photo-tour', guest: 'https://airbnb.co.kr/h/keo22' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK603', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258456014791965308/details/photo-tour', guest: 'https://airbnb.co.kr/h/kfo33' }, booking: { host: '#', guest: '#' } },
+            { name: 'KK802', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1258456948313175515/details/photo-tour', guest: 'https://airbnb.co.kr/h/kho22' }, booking: { host: '#', guest: '#' } }
+        ]
+    },
 
-                    const roomCardHTML = `
-                        <div class="bg-white/50 p-4 rounded-lg border border-gray-200/50 flex flex-col justify-between shadow-sm">
-                            <h3 class="room-title text-md font-semibold text-gray-800 mb-4 text-center">${room.name}</h3>
-                            <div class="space-y-2">
-                                <a href="${links.host}" ${links.host === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'}
-                                   class="link-button w-full text-white font-medium py-2 px-4 rounded-md shadow-md ${hostLinkClass}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a4 4 0 100 8 4 4 0 000-8z" clip-rule="evenodd" /></svg>
-                                    <span>호스트용</span>
-                                </a>
-                                <a href="${links.guest}" ${links.guest === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'}
-                                   class="link-button w-full text-white font-medium py-2 px-4 rounded-md shadow-md ${guestLinkClass}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
-                                    <span>게스트용</span>
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    roomGrid.innerHTML += roomCardHTML;
-                });
-                
-                content.appendChild(roomGrid);
-                buildingSection.appendChild(header);
-                buildingSection.appendChild(content);
-                container.appendChild(buildingSection);
+    {
+        name: '다카다노바바',
+        rooms: [
+            { name: '2', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214230580288626213/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba2' }, booking: { host: '#', guest: '#' } },
+            { name: '3', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1216877132493273384/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba3' }, booking: { host: '#', guest: '#' } },
+            { name: '4', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1182114775644658542/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba4' }, booking: { host: '#', guest: '#' } },
+            { name: '4키즈룸', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1343899459815332438/details/photo-tour', guest: 'https://airbnb.co.kr/h/t4kids' }, booking: { host: '#', guest: '#' } },
+            { name: '5', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214236999603623357/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba5' }, booking: { host: '#', guest: '#' } },
+            { name: '6', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214238348307908175/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba6' }, booking: { host: '#', guest: '#' } },
+            { name: '7', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214239283431336487/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba7' }, booking: { host: '#', guest: '#' } },
+            { name: '8', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214240267860622382/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba8' }, booking: { host: '#', guest: '#' } },
+            { name: '9', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1214241285798631988/details/photo-tour', guest: 'https://airbnb.co.kr/h/baba9' }, booking: { host: '#', guest: '#' } }
+        ]
+    },
 
-                // Accordion Click Event
-                header.addEventListener('click', () => {
-                    const isOpen = header.classList.contains('open');
-                    if (isOpen) {
-                        content.style.maxHeight = null;
-                        header.classList.remove('open');
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        header.classList.add('open');
-                    }
-                });
-            });
-        }
+    {
+        name: '다이쿄초',
+        rooms: [
+            { name: 'B01', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965558957563417053/details/photo-tour', guest: 'https://airbnb.co.kr/h/db01gyoen' }, booking: { host: '#', guest: '#' } },
+            { name: 'B02', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965560158683430511/details/photo-tour', guest: 'https://airbnb.co.kr/h/db02gyoen' }, booking: { host: '#', guest: '#' } },
+            { name: 'Y101', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965553590629698304/details/photo-tour', guest: 'https://airbnb.co.kr/h/101gyoen' }, booking: { host: '#', guest: '#' } },
+            { name: 'Y102', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965562240007732988/details/photo-tour', guest: 'https://airbnb.co.kr/h/102gyoen' }, booking: { host: '#', guest: '#' } },
+            { name: 'Y201', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965563478624315997/details/photo-tour', guest: 'https://airbnb.co.kr/h/201gyoen' }, booking: { host: '#', guest: '#' } },
+            { name: 'Y202', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965564827009588959/details/photo-tour', guest: 'https://airbnb.co.kr/h/202gyoen' }, booking: { host: '#', guest: '#' } },
+            { name: 'Y301', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/965566400786989909/details/photo-tour', guest: 'https://airbnb.co.kr/h/302gyoen' }, booking: { host: '#', guest: '#' } }
+        ]
+    },
 
-        // Platform Toggle Events
-        btnAirbnb.addEventListener('click', () => {
-            currentPlatform = 'airbnb';
-            btnAirbnb.classList.add('active');
-            btnBooking.classList.remove('active');
-            platformToggleContainer.classList.remove('booking-active');
-            renderList(currentPlatform);
+    {
+        name: '기타',
+        rooms: [
+            { name: 'OkuboA 東京都新宿区大久保1-5-19 B동', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/952403875937085488/details/photo-tour', guest: 'https://airbnb.co.kr/h/higashishinjuku' }, booking: { host: '#', guest: '#' } },
+            { name: 'OkuboB 東京都新宿区大久保1-5-19 A동', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1517052329343209381/details/photo-tour', guest: 'https://airbnb.co.kr/h/higashishinjuku22' }, booking: { host: '#', guest: '#' } },
+            { name: 'OkuboC 東京都新宿区大久保1-13-1 KR Residence', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1001187077644900557/details/photo-tour', guest: 'https://airbnb.co.kr/h/krresidence' }, booking: { host: '#', guest: '#' } },
+            { name: '사노시', airbnb: { host: 'https://www.airbnb.co.kr/hosting/listings/editor/1109872746221826901/details/photo-tour', guest: 'https://airbnb.co.kr/h/sanobessou' }, booking: { host: '#', guest: '#' } }
+        ]
+    }
+];
+const container = document.getElementById('building-list-container');
+const btnAirbnb = document.getElementById('btn-airbnb');
+const btnBooking = document.getElementById('btn-booking');
+const platformToggleContainer = document.getElementById('platform-toggle-container');
+let currentPlatform = 'airbnb';
+
+function renderList(platform) {
+    container.innerHTML = '';
+
+    buildings.forEach(building => {
+        const section = document.createElement('div');
+        section.className = 'main-container rounded-xl shadow-lg overflow-hidden';
+
+        const header = document.createElement('div');
+        header.className = 'accordion-header p-5 flex justify-between items-center cursor-pointer border-b border-gray-200/50';
+        header.innerHTML = `
+            <h2 class="text-xl font-bold text-gray-700">${building.name}</h2>
+            <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        `;
+
+        const content = document.createElement('div');
+        content.className = 'accordion-content';
+
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5';
+
+        building.rooms.forEach(room => {
+            const links = room[platform];
+
+            const hostClass = links.host === '#' ? 'disabled-link' : 'bg-indigo-600 hover:bg-indigo-700';
+            const guestClass = links.guest === '#' ? 'disabled-link' : 'bg-teal-500 hover:bg-teal-600';
+
+            grid.innerHTML += `
+                <div class="bg-white/50 p-4 rounded-lg border border-gray-200/50 shadow-sm">
+                    <h3 class="text-md font-semibold text-gray-800 mb-4 text-center">${room.name}</h3>
+
+                    <a href="${links.host}" ${links.host !== '#' ? "target='_blank'" : ""} 
+                    class="link-button w-full text-white font-medium py-2 px-4 rounded-md ${hostClass}">
+                        호스트용
+                    </a>
+
+                    <a href="${links.guest}" ${links.guest !== '#' ? "target='_blank'" : ""} 
+                    class="link-button w-full text-white font-medium py-2 px-4 rounded-md mt-2 ${guestClass}">
+                        게스트용
+                    </a>
+                </div>
+            `;
         });
 
-        btnBooking.addEventListener('click', () => {
-            currentPlatform = 'booking';
-            btnBooking.classList.add('active');
-            btnAirbnb.classList.remove('active');
-            platformToggleContainer.classList.add('booking-active');
-            renderList(currentPlatform);
-        });
+        content.appendChild(grid);
+        section.appendChild(header);
+        section.appendChild(content);
+        container.appendChild(section);
 
-        // Initial Render
-        renderList(currentPlatform);
-    </script>
+        header.addEventListener('click', () => {
+            const open = header.classList.contains('open');
+            content.style.maxHeight = open ? null : content.scrollHeight + 'px';
+            header.classList.toggle('open');
+        });
+    });
+}
+
+btnAirbnb.addEventListener('click', () => {
+    currentPlatform = 'airbnb';
+    btnAirbnb.classList.add('active');
+    btnBooking.classList.remove('active');
+    platformToggleContainer.classList.remove('booking-active');
+    renderList(currentPlatform);
+});
+
+btnBooking.addEventListener('click', () => {
+    currentPlatform = 'booking';
+    btnBooking.classList.add('active');
+    btnAirbnb.classList.remove('active');
+    platformToggleContainer.classList.add('booking-active');
+    renderList(currentPlatform);
+});
+
+renderList(currentPlatform);
+</script>
 
 </body>
 </html>
-
